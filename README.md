@@ -1,5 +1,7 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+This is an iMageSearch system that uses the unsplash api to search for images. i also used tailwind css to style the images.
+
 ## Available Scripts
 
 In the project directory, you can run:
