@@ -1,18 +1,45 @@
-import React from "react";
+import React, { useState } from "react";
+import SearchBar from "./assets/Components/SearchBar";
+import axios from "axios";
+import ImageList from "./assets/Components/ImageList";
+
+const key = process.env.REACT_APP_UNSPLASH_API_KEY;
 
 function App() {
+	const [term, setTerm] = useState("");
+	const [results, setResults] = useState([]);
+	const [searched, setSearched] = useState(false);
+
+	function handleSearch(e) {
+		e.preventDefault();
+		axios
+			.get(
+				`https://api.unsplash.com/search/photos/?client_id=${key}&query=${term}`
+			)
+			.then((response) => {
+				const images = response.data.results;
+
+				setResults(images);
+			})
+			.catch((error) => {
+				//Handle No result
+				console.log("error:", error);
+				setResults([]);
+			})
+			.finally(() => {
+				setSearched(true);
+			});
+	}
+
 	return (
-		<div className="max-w-sm rounded overflow-hidden shadow-lg">
-			{/* <img className="w-full" src={require("./profile.jpg")} alt="Display" /> */}
-			<div className="px-6 py-4">
-				<div className="font-bold text-green-500 text-xl mb-2">Alt Text</div>
-				<p className="text-gray-700 text-base">Image Details</p>
-			</div>
-			<div className="">
-				<span className="">#Software Engineer</span>
-				<span className="">#Writter</span>
-				<span className="">#Public Speaker</span>
-			</div>
+		<div className="container p-4 mx-auto mt-5">
+			<SearchBar
+				term={term}
+				handleChange={(value) => setTerm(value)}
+				handleSearch={(e) => handleSearch(e)}
+			/>
+
+			<ImageList results={results} searched={searched} />
 		</div>
 	);
 }
